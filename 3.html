@@ -1,12 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    
-</body>
+  </head>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    .tabs_content,
+    .tabs_heard {
+      width: 100%;
+      height: 100px;
+      background-color: #ccc;
+      display: flex;
+      line-height: 100px;
+    }
+
+    .tabs_item {
+      flex: 1;
+      margin: 3px;
+      text-align: center;
+      background-color: #fff;
+    }
+
+    .tabs_content {
+      justify-content: center;
+      align-items: center;
+      height: 500px;
+      margin-top: 20px;
+    }
+
+    .content {
+      background-color: #fff;
+      width: 330px;
+      height: 100px;
+      padding: 0 10px;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      transition: 1s;
+    }
+
+    .content:hover {
+      width: 1000px;
+      height: 200px;
+      line-height: 200px;
+      transition: 1s;
+    }
+
+    .checked_style {
+      color: red;
+    }
+  </style>
+
+  <body>
+    <div class="tabs_heard">
+      <!-- <div class="tabs_item"></div> -->
+    </div>
+    <div class="tabs_content">
+      <div class="content">点击最顶部不同的tab签来展示不同的内容</div>
+    </div>
+  </body>
+
+  <script>
+    const arr = [...Array(10).keys()];
+    let nodeName = "";
+    const data = arr.map((item) => {
+      return {
+        tabName: `tab-${item}`,
+        tabIndex: +item,
+        id: Math.random().toString(16).substring(2),
+        tabContent: `这是tab-${item}的内容----蔷薇蔷薇哦i存在，先迈出那是单身快乐自行车那拉氏看到你离开,点击可以`,
+      };
+    });
+    console.log(data);
+
+    const [tabs_heard] = document.getElementsByClassName("tabs_heard");
+    // // 事件委托，给父盒子写上 监听全部子集
+    // tabs_heard.addEventListener("click", function (e) {
+    //   e.target.setAttribute("class", "tabs_item checked_style");
+    //   console.log(e.target.innerHTML, nodeName);
+    // });
+
+    const [content] = document.getElementsByClassName("content");
+    // 遍历tabs 给每个tabs增加点击事件及样式
+    data.forEach((item, index) => {
+      const el = document.createElement("div");
+      el.innerHTML = item.tabName;
+      el.className = "tabs_item";
+      el.onclick = () => {
+        content.innerHTML = item.tabContent;
+        handleNode();
+        // 如果不这样 用上方注释掉的事件委托能完成一样的效果
+        el.setAttribute("class", "tabs_item checked_style");
+      };
+      tabs_heard.appendChild(el);
+    });
+
+    // 设置红色字体时，让全部的tab变成原来的样子
+    const handleNode = function () {
+      const els = document.getElementsByClassName("tabs_item");
+      for (const i in els) {
+        els[i].className = "tabs_item";
+      }
+    };
+  </script>
 </html>
