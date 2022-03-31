@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+  <script>
+    // const listenList = [];
+    // const obj = {};
+    // obj.listen = function (cb) {
+    //   listenList.push(cb);
+    // };
+    // obj.send = function () {
+    //   for (const i in listenList) {
+    //     console.log(this, arguments, listenList[i]);
+    //     // listenList[i](1, 2);
+    //     listenList[i].apply(this, arguments);
+    //   }
+    // };
+
+    // obj.listen(function (a, b) {
+    //   console.log(a, b);
+    // });
+
+    // obj.send(1, 2);
+    // obj.send(2, 2);
+
+    const center = {
+      listenList: {}, // 发布定决的人物集合
+      // nextTick_list: [], // 异步执行队列的集合
+      // 进行事件监听
+      listen(name, cb, needRender = true) {
+        this.listenList[name] = cb;
+        needRender && this.render(name);
+      },
+      // 发布事件
+      sendEvent(eventName) {
+        if (!this.listenList[eventName])
+          return console.log("此人没有订阅或已被取消订阅");
+        this.listenList[eventName].apply(this);
+      },
+      // 移除事件
+      removeEvent(eventName) {
+        if (!this.listenList[eventName]) return console.log("此人没有订阅");
+        delete this.listenList[eventName] &&
+          console.log(`用户${eventName}--取消订阅成功`);
+      },
+      // body内渲染div
+      render(className) {
+        const el = document.createElement("div");
+        el.className = `${className}_class`;
+        el.innerHTML = `这个盒子的class是${className}_class,点我一下试试`;
+        document.body.appendChild(el);
+        el.onclick = function () {
+          if (el.innerHTML !== "继续点我") {
+            el.style.color = "red";
+            el.innerHTML = "继续点我";
+            return;
+          }
+          el.style.color = "#000";
+          el.innerHTML = `这个盒子的class是${className}_class,点我一下试试`;
+        };
+      },
+      // 异步执行函数
+      nextTick(cb) {
+        if (Object.prototype.toString.call(cb) !== "[object Function]") {
+          throw new Error("nextTick必须为一个函数");
+        }
+        new Promise((resolve) => {
+          // this.nextTick_list.push(cb);
+          // resolve(this.nextTick_list);
+          resolve(cb);
+        }).then((res) => {
+          res();
+        });
+      },
+    };
+
+    center.listen("1", function () {
+      console.log("我是被订阅的第一条信息");
+    });
+    center.listen("2", function () {
+      console.log("我是被订阅的第二条信息");
+    });
+    // 3将不进行渲染
+    center.listen(
+      "3",
+      function () {
+        console.log("我是被订阅的第3条信息");
+      },
+      0
+    );
+
+    center.nextTick(() => {
+      console.log("测试nexttick");
+    });
+    center.nextTick(function () {
+      center.sendEvent("3");
+      // 移除2渲染的dom
+      const [el] = document.getElementsByClassName("2_class");
+      el.remove();
+    });
+    // center.nextTick(1)
+    center.sendEvent("1");
+    center.removeEvent("1");
+    center.removeEvent("1");
+    center.sendEvent("1");
+    center.sendEvent("2");
+    console.log(center);
+  </script>
+</html>

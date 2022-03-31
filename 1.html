@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    .inner_div_class {
+      color: red;
+    }
+  </style>
+  <body></body>
+  <script>
+    const div = document.createElement("div");
+    div.innerHTML = "创建的div";
+    document.body.appendChild(div);
+    const [div_] = document.getElementsByTagName("div");
+
+    // 子div的创建/隐藏/显示
+    div_.onclick = () => {
+      const node = document.getElementsByClassName("inner_div_class");
+      if (node.length) {
+        console.log(node[0].style.display);
+        !node[0].style.display || node[0].style.display === "block"
+          ? (node[0].style.display = "none")
+          : (node[0].style.display = "block");
+        return;
+      }
+      const inner_div = document.createElement("div");
+      inner_div.className = "inner_div_class";
+      inner_div.innerHTML = "点击div创建的子集";
+      div_.appendChild(inner_div);
+    };
+  </script>
+</html>
